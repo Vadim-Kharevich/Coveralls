@@ -1,0 +1,152 @@
+﻿@model IEnumerable<CoverallsWeb.Models.Storage>
+
+@{
+    ViewData["Title"] = "Склад";
+    var searchString = "";
+    var searchFor = "";
+}
+<h2>Склад</h2>
+
+<hr />
+<p>
+    <a asp-action="Create">Добавить</a>
+</p>
+<div class="content">
+    <div class="tablecontent">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <a id="name" asp-action="Index" asp-route-sort="true" asp-route-column="Name" asp-route-high="@ViewBag.High">Наименование</a>
+
+                    </th>
+                    <th class="intcolumn">
+                        <a id="size" asp-action="Index" asp-route-sort="true" asp-route-column="Size" asp-route-high="@ViewBag.High">Размер</a>
+                    </th>
+                    <th class="intcolumn">
+                        <a id="height" asp-action="Index" asp-route-sort="true" asp-route-column="Height" asp-route-high="@ViewBag.High">Рост</a>
+                    </th>
+                    <th class="intcolumn">
+                        <a id="count" asp-action="Index" asp-route-sort="true" asp-route-column="Count" asp-route-high="@ViewBag.High">Количество</a>
+                    </th>
+                    <th class="actioncolumn">
+                        <a>Действия</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Coveralls.Name)
+                        </td>
+                        <td class="intcolumn">
+                            @Html.DisplayFor(modelItem => item.Coveralls.Size)
+                        </td>
+                        <td class="intcolumn">
+                            @if (item.Coveralls.Type.Name == "Верхняя одежда")
+                            {
+                                @Html.DisplayFor(modelItem => item.Coveralls.Height)
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+                        <td class="intcolumn">
+                            @Html.DisplayFor(modelItem => item.Count)
+                        </td>
+                        <td class="actioncolumn">
+                            <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div id="empty" style="text-align:center"><h4>Ничего не найдено</h4></div>
+    </div>
+
+    <div class="search">
+        <div style="text-align:center">Поиск</div>
+        <div>
+            <form asp-action="Index">
+                <input asp-for="@searchString" id="searchString" class="form-control" autocomplete="off">
+                <input asp-route-search="true" asp-route-searchString="@searchString" asp-route-searchFor="@searchFor" type="submit" value="Поиск" class="btn btn-default buttonssearch"  />
+                <button asp-action="Index" class="btn btn-default buttonssearch">Показать все</button>
+                <br />
+                <div>
+                    <div>
+                        @Html.RadioButtonFor(x => searchFor, "All", new { id = "all" })
+                        @Html.Label("All", "Все", new { @for = "all" })
+                    </div>
+                    <div>
+                        @Html.RadioButtonFor(x => searchFor, "Name", new { id = "nameradio" })
+                        @Html.Label("Name", "Наименование", new { @for = "nameradio" })
+                    </div>
+                    <div>
+                        @Html.RadioButtonFor(x => searchFor, "Size", new { id = "sizeradio" })
+                        @Html.Label("Size", "Размер", new { @for = "sizeradio" })
+                    </div>
+                    <div>
+                        @Html.RadioButtonFor(x => searchFor, "Height", new { id = "heightradio" })
+                        @Html.Label("Height", "Рост", new { @for = "heightradio" })
+                    </div>
+                    <div>
+                        @Html.RadioButtonFor(x => searchFor, "Count", new { id = "countradio" })
+                        @Html.Label("Count", "Количество", new { @for = "countradio" })
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        document.getElementById("all").checked = true;
+        var empty = "@ViewBag.Empty";
+        if (empty == "True") {
+            document.getElementById("empty").style.visibility = "visible";
+        }
+        var search = "@ViewBag.Search";
+        if (search != "") {
+            switch (search) {
+                case "Name":
+                    document.getElementById("nameradio").checked = true;
+                    break;
+                case "Size":
+                    document.getElementById("sizeradio").checked = true;
+                    break;
+                case "Height":
+                    document.getElementById("heightradio").checked = true;
+                    break;
+                case "Count":
+                    document.getElementById("countradio").checked = true;
+                    break;
+            }
+        }
+        var column = "@ViewBag.Column";
+        var high = "@ViewBag.High";
+        if (column != "") {
+            switch (column) {
+                case "Name":
+                    if (high == "True") document.getElementById("name").text = "Наименование ↓";
+                    else document.getElementById("name").text = "Наименование ↑";
+                    break;
+                case "Size":
+                    if (high == "True") document.getElementById("size").text = "Размер ↓";
+                    else document.getElementById("size").text = "Размер ↑";
+                    break;
+                case "Height":
+                    if (high == "True") document.getElementById("height").text = "Рост ↓";
+                    else document.getElementById("height").text = "Рост ↑";
+                    break;
+                case "Count":
+                    if (high == "True") document.getElementById("count").text = "Количество ↓";
+                    else document.getElementById("count").text = "Количество ↑";
+                    break;
+            }
+        }
+    }
+</script>

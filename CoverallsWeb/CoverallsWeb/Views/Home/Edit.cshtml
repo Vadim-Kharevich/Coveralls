@@ -1,0 +1,81 @@
+﻿@model CoverallsWeb.Models.Storage
+
+@{
+    ViewData["Title"] = "Редактирование";
+}
+
+    <h2>Редактирование</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CoverallsId" />
+            <input type="hidden" asp-for="Coveralls.Id" />
+            <div class="form-group">
+                <label class="control-label"> Наименование</label>
+                <input asp-for="Coveralls.Name" class="form-control" required>
+                <span asp-validation-for="Coveralls.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Тип</label>
+                <select asp-for="Coveralls.Type.Name" class="form-control" onchange="setVisible(this.value)">
+                    @if (Model.Coveralls.TypeId == 1)
+                    {
+                        <option selected>Верхняя одежда</option>
+                        <option>Обувь</option>
+                    }
+                    else
+                    {
+                        <option>Верхняя одежда</option>
+                        <option selected>Обувь</option>
+                    }
+                </select>
+                <span asp-validation-for="Coveralls.Type.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Размер</label>
+                <input asp-for="Coveralls.Size" class="form-control" required>
+                <span asp-validation-for="Coveralls.Size" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="height">
+                <label class="control-label">Рост</label>
+                <input asp-for="Coveralls.Height" class="form-control" required>
+                <span asp-validation-for="Coveralls.Height" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Количество</label>
+                <input asp-for="Count" class="form-control" required>
+                <span asp-validation-for="Count" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">На главную</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script>
+    function setVisible(value) {
+        var elem = document.getElementById("height");
+        if (value == "Обувь") {
+            elem.style.display = 'none';
+        }
+        else {
+             elem.style.display = 'block';
+        }
+    }
+    window.onload = function () {
+        var elem = document.getElementById("Coveralls_Type_Name");
+        setVisible(elem.value);
+    }
+</script>
